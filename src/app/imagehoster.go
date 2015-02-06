@@ -1,4 +1,5 @@
 package main
+
 import "encoding/json"
 import "database/sql"
 import "path/filepath"
@@ -19,43 +20,44 @@ import "os"
 import "flag"
 import "strconv"
 import "mime"
-
-
+import "github.com/rs/cors"
 
 type DbImage struct {
 	images_id int64
-	path string
-	shorturl string
-	mime string
+	path      string
+	shorturl  string
+	mime      string
 }
 
+func getImage(shorturl string) (*DbImage, error) {
+	db, err := sql.Open("mysql", config.Database.ConStr)
+	defer db.Close()
 
-func getImage(shorturl string) (*DbImage, error)  {
-		db,err := sql.Open("mysql", config.Database.ConStr)
-		defer db.Close()
-		
-		if err != nil {
-			log.Println(err.Error())
-			return nil, err
-		}
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
 
-		row := db.QueryRow("select * from images where shorturl = ?", shorturl);
-		image := new(DbImage)
-		err = row.Scan(&image.images_id, &image.path, &image.shorturl, &image.mime)
-		if err != nil {
-			log.Println(err.Error())
-			return nil, err
-		}
+	row := db.QueryRow("select * from images where shorturl = ?", shorturl)
+	image := new(DbImage)
+	err = row.Scan(&image.images_id, &image.path, &image.shorturl, &image.mime)
+	if err != nil {
+		log.Println(err.Error())
+		return nil, err
+	}
 
-		return image, nil
+	return image, nil
 
 }
+
 type Config struct {
 	Database struct {
 		ConStr string
 	}
 }
+
 var config Config
+
 func main() {
 
 	err := gcfg.ReadFileInto(&config, "config.ini")
@@ -64,19 +66,30 @@ func main() {
 		return
 	}
 
-	log.Println("parsed db ConStr" , config.Database.ConStr)
-	store := flag.String("store", "", "image store path");
-	flag.Parse();
+	log.Println("parsed db ConStr", config.Database.ConStr)
+	store := flag.String("store", "", "image store path")
+	flag.Parse()
 	if *store == "" {
 		fmt.Println("-store was not given, usage <program> -store <path>")
-		return 
+		return
 	}
 	fmt.Println("Store: ", *store)
+
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+	})
+
 	server := martini.Classic()
 	server.Use(render.Renderer())
+	server.Use(c.HandlerFunc)
+
 	server.Use(martini.Static("assets"))
 	server.Get("/", func(r render.Render) {
 		r.HTML(200, "hello", "deniz")
+	})
+
+	server.Options("/upload", func() {
+		// http options
 	})
 
 	server.Get("/serv/:shorturl/:w/:h", func(params martini.Params, res http.ResponseWriter) {
@@ -87,7 +100,7 @@ func main() {
 			http.Error(res, "not found", 404)
 			return
 		}
-		file,err := os.Open(dbimage.path)
+		file, err := os.Open(dbimage.path)
 		defer file.Close()
 		if err != nil {
 			log.Println(err.Error())
@@ -95,12 +108,13 @@ func main() {
 			return
 		}
 
-	    var img image.Image
+		var img image.Image
+
 		if dbimage.mime == "image/jpeg" {
-			img,err = jpeg.Decode(file)
+			img, err = jpeg.Decode(file)
 		}
 		if dbimage.mime == "image/png" {
-			img,err = png.Decode(file)
+			img, err = png.Decode(file)
 		}
 
 		if err != nil {
@@ -108,30 +122,31 @@ func main() {
 			http.Error(res, "not found", 404)
 			return
 		}
-		width,err := strconv.ParseUint(params["w"], 10, 0)
+		width, err := strconv.ParseUint(params["w"], 10, 0)
 		if err != nil {
 			log.Println(err.Error())
 			http.Error(res, "width parse error", 500)
 			return
 		}
-		height,err := strconv.ParseUint(params["h"], 10, 0)
+		height, err := strconv.ParseUint(params["h"], 10, 0)
 		if err != nil {
 			log.Println(err.Error())
 			http.Error(res, "height parse error", 500)
 			return
 		}
-		m := resize.Resize(uint(width), uint(height),img, resize.Lanczos3)
-//		m := resize.Thumbnail(uint(width), uint(height),img, resize.Lanczos3)
-		
-		jpeg.Encode(res,m,nil)
+
+		m := resize.Resize(uint(width), uint(height), img, resize.Lanczos3)
+		//		m := resize.Thumbnail(uint(width), uint(height),img, resize.Lanczos3)
+
+		jpeg.Encode(res, m, nil)
 	})
-	
+
 	server.Get("/serv/:shorturl", func(params martini.Params, res http.ResponseWriter) {
 		image, err := getImage(params["shorturl"])
 
 		res.Header().Set("Content-Type", image.mime)
 
-		buf,err := ioutil.ReadFile(image.path) 
+		buf, err := ioutil.ReadFile(image.path)
 		if err != nil {
 			log.Println(err.Error())
 			http.Error(res, "not found", 404)
@@ -139,10 +154,10 @@ func main() {
 		}
 		res.Write(buf)
 	})
-	
-	server.Post("/upload", func(r *http.Request, res http.ResponseWriter) (int,string) {
+
+	server.Post("/upload", func(r *http.Request, res http.ResponseWriter) (int, string) {
 		log.Println("parsing request")
-	
+
 		err := r.ParseMultipartForm(10000000)
 		if err != nil {
 			return http.StatusInternalServerError, err.Error()
@@ -150,34 +165,59 @@ func main() {
 
 		files := r.MultipartForm.File["file"]
 		results := make(map[string]string)
-		for i,_ := range files {
-			file,err := files[i].Open()
+		for i, _ := range files {
+			file, err := files[i].Open()
 			defer file.Close()
+
+			imageConf, _, err := image.DecodeConfig(file)
+			if err != nil {
+				log.Println(err.Error())
+			}
+			//		log.Println(imageConf.Height,imageConf.Width)
+			fmt.Println("DIMENTIONS", imageConf.Height, "X", imageConf.Width)
+//			var format string
+//			
+//			if imageConf.Width > imageConf.Height {
+//				
+//				format = "landscape"
+//				
+//			} else {
+//				
+//				format ="portret" 
+//				
+//			}
+			
 
 			if err != nil {
 				return http.StatusInternalServerError, err.Error()
 			}
-			
-			log.Println("creating file")
-			dst, err := os.Create(*store + "/" + files[i].Filename)
+
+			log.Println("creating file ", *store+"/"+files[i].Filename)
+			//			dst, err := os.Create(*store + "/" + files[i].Filename)
+			ext := filepath.Ext(files[i].Filename)
+
+			//			uniqfilename := TempFileName("upload/",ext)
+
+			dst, err := ioutil.TempFile(*store, "fi_FIporno"+ext+".")
+
 			defer dst.Close()
 
 			if err != nil {
 				return http.StatusInternalServerError, err.Error()
 			}
 
-			if _,err := io.Copy(dst,file); err != nil {
+			if _, err := io.Copy(dst, file); err != nil {
 				return http.StatusInternalServerError, err.Error()
 			}
 
 			log.Println("db str", config.Database.ConStr)
-			db,err := sql.Open("mysql", config.Database.ConStr)
+			db, err := sql.Open("mysql", config.Database.ConStr)
 			defer db.Close()
 
-			ext := filepath.Ext(files[i].Filename)
 			mime := mime.TypeByExtension(ext)
 			log.Println("type", mime)
-			res , err := db.Exec("insert into images (images_id,path,mime) values (null,?,?)", *store+ "/"+files[i].Filename,mime)
+			//			res , err := db.Exec("insert into images (images_id,path,mime) values (null,?,?)", *store+ "/"+files[i].Filename,mime)
+			res, err := db.Exec("insert into images (images_id,path,mime) values (null,?,?)", dst.Name(), mime)
 			if err != nil {
 				return http.StatusInternalServerError, err.Error()
 			}
@@ -192,9 +232,9 @@ func main() {
 			if _, err := db.Exec("update images set shorturl = ? where images_id = ?", shorturl, id); err != nil {
 				return http.StatusInternalServerError, err.Error()
 			}
-			
+
 		}
-		jsn,err := json.Marshal(results)
+		jsn, err := json.Marshal(results)
 		res.Header().Set("Content-Type", "application/json")
 		return 200, string(jsn)
 	})
