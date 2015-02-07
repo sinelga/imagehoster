@@ -1,7 +1,7 @@
 package main
 
 import (
-	"net/http"
+//	"net/http"
 	"log"
 	"log/syslog"
 	"github.com/rs/cors"
@@ -25,12 +25,11 @@ func main() {
 	})
 	goji.Use(c.Handler)
 
-	goji.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte("{\"hello\": \"world\"}"))
-	})
-
 	goji.Get("/api", handlers.MhandleAll)
+	
+	goji.Get("/img/:id/:imgfile/:img/:mime", handlers.ImageShow)
+	
+	
 
 	goji.Serve()
 }

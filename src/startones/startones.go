@@ -2,16 +2,20 @@ package startones
 
 import (
 	//	"github.com/garyburd/redigo/redis"
-	"io/ioutil"
+	"code.google.com/p/gcfg"
+//	"io/ioutil"
 	"log"
 	"log/syslog"
-	//	"os"
-	"strings"
-	//	"fmt"
+	"domains"
+
 )
 
+
+
+var config domains.Config
+
 //func Start(golog syslog.Writer) ([]string,map[string]struct{}) {
-func Start() (syslog.Writer, []string) {
+func Start() (syslog.Writer, domains.Config) {
 
 	//	sitestoblock := make(map[string]struct{})
 
@@ -23,15 +27,27 @@ func Start() (syslog.Writer, []string) {
 	}
 
 	golog.Info("StartOnes")
-
-	content, err := ioutil.ReadFile("/home/juno/git/imagehoster/config.txt")
+	
+	err = gcfg.ReadFileInto(&config, "/home/juno/git/imagehoster/config.ini")
 	if err != nil {
-		//Do something
-		golog.Err(err.Error())
+		
+		golog.Crit("cannot read configuration file config.ini" + err.Error())
+//		return nil,nil
 	}
-	parameters := strings.Split(string(content), ",")
-	cleanparameters := []string{strings.TrimSpace(parameters[0]), strings.TrimSpace(parameters[1]), strings.TrimSpace(parameters[2])}
+	
+	golog.Info(config.Database.ConStr)
 
-	return *golog, cleanparameters
+//	
+//	
+//
+//	content, err := ioutil.ReadFile("/home/juno/git/imagehoster/config.txt")
+//	if err != nil {
+//		//Do something
+//		golog.Err(err.Error())
+//	}
+//	parameters := strings.Split(string(content), ",")
+//	cleanparameters := []string{strings.TrimSpace(parameters[0]), strings.TrimSpace(parameters[1]), strings.TrimSpace(parameters[2])}
+
+	return *golog, config
 
 }
