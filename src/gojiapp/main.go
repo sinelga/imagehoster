@@ -30,6 +30,9 @@ func main() {
 	goji.Get("/img/:id/:imgfile/:img/:mime", handlers.ImageShow)
 	
 	
+	goji.Options("/upload",handlers.MakeUpload)	
+	goji.Post("/upload",handlers.MakeUpload) 
+	
 
 	goji.Serve()
 }

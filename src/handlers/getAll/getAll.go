@@ -21,8 +21,7 @@ func GetAll(golog syslog.Writer, config domains.Config) []domains.Character {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("select Id,Name,Age,Moto,Description,Region_id,Adv_phone_id,Img_orient,Topic,Sex, Created_at,Updated_at,Img_file_name,Img_content_type,Img_file_size,Img_updated_at from characters limit 10")
-//	rows, err := db.Query("select Id,Name,Age from characters")
+	rows, err := db.Query("select Id,Name,Age,Moto,Description,Region_id,Adv_phone_id,Img_orient,Topic,Sex, Created_at,Updated_at,Img_file_name,Img_content_type,Img_file_size,Img_updated_at from characters  order by created_at desc limit 10")
 	if err != nil {
 		golog.Err(err.Error())
 	}

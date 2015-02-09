@@ -8,6 +8,9 @@ type Config struct {
 	Database struct {
 		ConStr string
 	}
+	Store struct {
+		StoreDir string
+	}
 }
 
 
