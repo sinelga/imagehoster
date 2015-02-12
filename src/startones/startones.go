@@ -37,16 +37,7 @@ func Start() (syslog.Writer, domains.Config) {
 	
 	golog.Info(config.Database.ConStr)
 
-//	
-//	
-//
-//	content, err := ioutil.ReadFile("/home/juno/git/imagehoster/config.txt")
-//	if err != nil {
-//		//Do something
-//		golog.Err(err.Error())
-//	}
-//	parameters := strings.Split(string(content), ",")
-//	cleanparameters := []string{strings.TrimSpace(parameters[0]), strings.TrimSpace(parameters[1]), strings.TrimSpace(parameters[2])}
+
 
 	return *golog, config
 

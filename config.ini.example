@@ -1,0 +1,5 @@
+;ads
+[database]
+conStr = "*:*@/weber_production?parseTime=true"
+[store]
+storeDir = "upload/testimg/"

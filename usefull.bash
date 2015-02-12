@@ -9,3 +9,11 @@ GOPATH=$GOPATH:/home/juno/git/imagehoster go test -v
 1,96s/dirname .\/0/dirname .\//
 
 find . -type d -empty -delete
+
+
+SQL
+use mysql
+drop database weber_production;
+create database weber_production;
+use weber_production;
+mysqldump --order-by-primary --compress --single-transaction --skip-triggers -uasterisk -p weber_production >weber_production.db
