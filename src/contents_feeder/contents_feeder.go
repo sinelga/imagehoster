@@ -38,8 +38,10 @@ func main() {
 	names := find_names.FindAll(golog, config)
 
 	characters := find_all_characters.FindAll(golog, config)
+	
+	
 
-	for _, character := range characters {
+	for n, character := range characters {
 
 		if character.Moto == "" || character.Description == "" {
 
@@ -47,13 +49,13 @@ func main() {
 
 			if character.Moto == "" {
 
-				character.Moto = paragraph.Ptitle
+				characters[n].Moto = paragraph.Ptitle
 
 			}
 			if character.Description == "" {
 				s := []string{paragraph.Pphrase, paragraph.Sentences[0], paragraph.Sentences[1], paragraph.Sentences[2]}
 				description := strings.Join(s, " ")
-				character.Description = description
+				characters[n].Description = description
 
 			}
 
@@ -64,21 +66,21 @@ func main() {
 		if character.Adv_phone_id == 0 {
 
 			i := rand.Intn(len(adv_phone_id))
-			character.Adv_phone_id = adv_phone_id[i]
+			characters[n].Adv_phone_id = adv_phone_id[i]
 
 		}
 
 		if character.Region_id == 0 {
 
 			i := rand.Intn(len(regions_id))
-			character.Region_id = regions_id[i]
+			characters[n].Region_id = regions_id[i]
 
 		}
 
 		if character.Name == "" {
 
 			i := rand.Intn(len(names))
-			character.Name = names[i]
+			characters[n].Name = names[i]
 
 		}
 

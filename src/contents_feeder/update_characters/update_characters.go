@@ -5,7 +5,7 @@ import (
 	"domains"
 	_ "github.com/go-sql-driver/mysql"
 	"log/syslog"
-	//	"fmt"
+		"fmt"
 )
 
 func Update(golog syslog.Writer, config domains.Config, characters []domains.Character) {
@@ -25,7 +25,9 @@ func Update(golog syslog.Writer, config domains.Config, characters []domains.Cha
 
 	for _, character := range characters {
 
-		golog.Info(character.Name)
+		
+		fmt.Println(character)
+		
 
 		if stmt, err := tx.Prepare("update characters set name=?,moto=?,description=?,region_id=?, adv_phone_id=? where id=?"); err != nil {
 
