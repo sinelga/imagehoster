@@ -11,6 +11,11 @@ type Config struct {
 	Store struct {
 		StoreDir string
 	}
+	Redis struct {
+		Prot string
+		Host string
+		
+	}
 }
 
 
@@ -32,4 +37,13 @@ type Character struct {
 	Img_content_type string
 	Img_file_size int
 	Img_updated_at time.Time
+}
+
+type Paragraph struct {
+	Ptitle     string
+	Pphrase    string
+	Plocallink string
+	Phost      string
+	Sentences  []string
+	Pushsite   string
 }
