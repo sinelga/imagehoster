@@ -26,7 +26,9 @@ type Character struct {
 	Age int
 	Moto string
 	Description string
+	City string
 	Region_id int
+	Phone string
 	Adv_phone_id int
 	Img_orient string	
 	Topic string

@@ -23,12 +23,9 @@ func MhandleAll(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	})
 
-	//	golog.Info(c.URLParams)
-
 	golog.Info(c.URLParams["id"])
 	golog.Info(r.Method)
 
-	//	golog.Info(config.Database.ConStr)
 
 	characters := getAll.GetAll(golog, config)
 

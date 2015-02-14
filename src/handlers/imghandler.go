@@ -12,6 +12,7 @@ import (
 	"github.com/disintegration/imaging"
 	"runtime"
 	"startones"
+	"strconv"
 	
 )
 
@@ -20,10 +21,27 @@ func ImageShow(c web.C, w http.ResponseWriter, r *http.Request) {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	
 	golog, config = startones.Start()
+	width := 100;
+	height := 100;
+	
 
 	id := c.URLParams["id"]
 	imgfile := c.URLParams["imgfile"]
 	mime := c.URLParams["mime"]
+	
+	if c.URLParams["width"] !="" {
+		
+		widthstr :=c.URLParams["width"]
+		width,_ = strconv.Atoi(widthstr)
+			
+	}
+	
+	if c.URLParams["height"] !="" {
+		
+		heightstr :=c.URLParams["height"]
+		height,_ = strconv.Atoi(heightstr)
+			
+	}	
 
 	w.Header().Set("Content-Type", "image/"+mime)
 
@@ -39,7 +57,7 @@ func ImageShow(c web.C, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	m := imaging.Thumbnail(file, 100, 100, imaging.CatmullRom)
+	m := imaging.Thumbnail(file,width ,height , imaging.CatmullRom)
 	
 	jpeg.Encode(w, m, nil)
 

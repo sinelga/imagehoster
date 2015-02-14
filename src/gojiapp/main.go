@@ -27,7 +27,7 @@ func main() {
 
 	goji.Get("/api", handlers.MhandleAll)
 	
-	goji.Get("/img/:id/:imgfile/:img/:mime", handlers.ImageShow)
+	goji.Get("/img/:id/:imgfile/:img/:mime/:width/:height", handlers.ImageShow)
 	
 	
 	goji.Options("/upload",handlers.MakeUpload)	
