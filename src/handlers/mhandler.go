@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/zenazn/goji/web"
 	"handlers/getAll"
+	"handlers/getOne"
 	"log/syslog"
 	"net/http"
 	"startones"
@@ -23,18 +24,39 @@ func MhandleAll(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	})
 
-	golog.Info(c.URLParams["id"])
+	golog.Info("id " + c.URLParams["id"])
 	golog.Info(r.Method)
+	id := c.URLParams["id"]
 
+	var bytes []byte
+	var e error
 
-	characters := getAll.GetAll(golog, config)
+	if id == "" {
 
-	bytes, e := json.Marshal(characters)
-	if e != nil {
+		characters := getAll.GetAll(golog, config)
 
-		golog.Err(e.Error())
+		bytes, e = json.Marshal(characters)
+		if e != nil {
+
+			golog.Err(e.Error())
+
+		}
+
+	} else {
+
+		golog.Info("id " + id)
+
+		character := getOne.GetById(golog, config, id)
+
+		bytes, e = json.Marshal(character)
+		if e != nil {
+
+			golog.Err(e.Error())
+
+		}
 
 	}
+
 	w.Write(bytes)
 
 }

@@ -6,14 +6,14 @@ import (
 //	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"log/syslog"
-	"time"
+//	"time"
 )
 
 func GetAll(golog syslog.Writer, config domains.Config) []domains.Character {
 
-	golog.Info("Start GetAll" + time.Now().String())
+//	golog.Info("Start GetAll" + time.Now().String())
 
-	golog.Info(config.Database.ConStr)
+//	golog.Info(config.Database.ConStr)
 
 	db, err := sql.Open("mysql", config.Database.ConStr)
 	if err != nil {

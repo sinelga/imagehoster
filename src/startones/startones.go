@@ -26,7 +26,7 @@ func Start() (syslog.Writer, domains.Config) {
 		log.Fatal("error writing syslog!!")
 	}
 
-	golog.Info("StartOnes")
+//	golog.Info("StartOnes")
 	
 	err = gcfg.ReadFileInto(&config, "/home/juno/git/imagehoster/config.ini")
 	if err != nil {
