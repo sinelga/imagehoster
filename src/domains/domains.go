@@ -18,6 +18,14 @@ type Config struct {
 	}
 }
 
+//type Chat struct {
+//	
+//	Status string `json: "status"`
+//	Known string `json: "known"`
+//	Answer string `json: "answer"`
+//	
+//}
+
 
 type Character struct {
 	
