@@ -17,3 +17,7 @@ drop database weber_production;
 create database weber_production;
 use weber_production;
 mysqldump --order-by-primary --compress --single-transaction --skip-triggers -uasterisk -p weber_production >weber_production.db
+
+cat weber_production.db mysql -uasterisk -p weber_production
+
+

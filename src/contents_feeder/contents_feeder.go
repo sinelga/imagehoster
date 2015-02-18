@@ -38,8 +38,7 @@ func main() {
 	names := find_names.FindAll(golog, config)
 
 	characters := find_all_characters.FindAll(golog, config)
-	
-	
+		
 
 	for n, character := range characters {
 

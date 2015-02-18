@@ -11,10 +11,6 @@ import (
 
 func GetAll(golog syslog.Writer, config domains.Config) []domains.Character {
 
-//	golog.Info("Start GetAll" + time.Now().String())
-
-//	golog.Info(config.Database.ConStr)
-
 	db, err := sql.Open("mysql", config.Database.ConStr)
 	if err != nil {
 		golog.Err(err.Error())
@@ -29,7 +25,6 @@ func GetAll(golog syslog.Writer, config domains.Config) []domains.Character {
 	}
 	defer rows.Close()
 
-	//	fmt.Println("N rows", len(rows))
 	var characters []domains.Character
 
 	for rows.Next() {
@@ -45,7 +40,6 @@ func GetAll(golog syslog.Writer, config domains.Config) []domains.Character {
 
 	}
 	
-
 	return characters 
 
 }
