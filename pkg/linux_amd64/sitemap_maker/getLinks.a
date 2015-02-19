@@ -1,0 +1,206 @@
+!<arch>
+__.PKGDEF       0           0     0     644     23106     `
+go object linux amd64 go1.4.1 X:precisestack
+
+$$
+package getLinks
+	import runtime "runtime"
+	import sql "database/sql"
+	import domains "domains"
+	import syslog "log/syslog"
+	import mysql "github.com/go-sql-driver/mysql"
+	import time "time" // indirect
+	type @"time".zone struct { @"time".name string; @"time".offset int; @"time".isDST bool }
+	type @"time".zoneTrans struct { @"time".when int64; @"time".index uint8; @"time".isstd bool; @"time".isutc bool }
+	type @"time".Location struct { @"time".name string; @"time".zone []@"time".zone; @"time".tx []@"time".zoneTrans; @"time".cacheStart int64; @"time".cacheEnd int64; @"time".cacheZone *@"time".zone }
+	func (@"time".lÂ·2 *@"time".Location "esc:0x0") String () (? string)
+	func (@"time".lÂ·2 *@"time".Location "esc:0x0") @"time".firstZoneUsed () (? bool)
+	func (@"time".lÂ·2 *@"time".Location "esc:0x2") @"time".get () (? *@"time".Location)
+	func (@"time".lÂ·6 *@"time".Location "esc:0x1") @"time".lookup (@"time".secÂ·7 int64) (@"time".nameÂ·1 string, @"time".offsetÂ·2 int, @"time".isDSTÂ·3 bool, @"time".startÂ·4 int64, @"time".endÂ·5 int64)
+	func (@"time".lÂ·2 *@"time".Location "esc:0x0") @"time".lookupFirstZone () (? int)
+	func (@"time".lÂ·4 *@"time".Location "esc:0x0") @"time".lookupName (@"time".nameÂ·5 string "esc:0x0", @"time".unixÂ·6 int64) (@"time".offsetÂ·1 int, @"time".isDSTÂ·2 bool, @"time".okÂ·3 bool)
+	type @"time".Duration int64
+	func (@"time".dÂ·2 @"time".Duration) Hours () (? float64) { var @"time".hourÂ·3 @"time".Duration; ; @"time".hourÂ·3 = @"time".dÂ·2 / @"time".Duration(0x34630B8A000); var @"time".nsecÂ·4 @"time".Duration; ; @"time".nsecÂ·4 = @"time".dÂ·2 % @"time".Duration(0x34630B8A000); return float64(@"time".hourÂ·3) + float64(@"time".nsecÂ·4) * 0x9C5FFF26ED75Fp-93 }
+	func (@"time".dÂ·2 @"time".Duration) Minutes () (? float64) { var @"time".minÂ·3 @"time".Duration; ; @"time".minÂ·3 = @"time".dÂ·2 / @"time".Duration(0xDF8475800); var @"time".nsecÂ·4 @"time".Duration; ; @"time".nsecÂ·4 = @"time".dÂ·2 % @"time".Duration(0xDF8475800); return float64(@"time".minÂ·3) + float64(@"time".nsecÂ·4) * 0x9299FF347E9E9p-87 }
+	func (@"time".dÂ·2 @"time".Duration) Nanoseconds () (? int64) { return int64(@"time".dÂ·2) }
+	func (@"time".dÂ·2 @"time".Duration) Seconds () (? float64) { var @"time".secÂ·3 @"time".Duration; ; @"time".secÂ·3 = @"time".dÂ·2 / @"time".Duration(0x3B9ACA00); var @"time".nsecÂ·4 @"time".Duration; ; @"time".nsecÂ·4 = @"time".dÂ·2 % @"time".Duration(0x3B9ACA00); return float64(@"time".secÂ·3) + float64(@"time".nsecÂ·4) * 0x112E0BE826D695p-82 }
+	func (@"time".dÂ·2 @"time".Duration) String () (? string)
+	type @"time".Month int
+	func (@"time".mÂ·2 @"time".Month) String () (? string) { return @"time".months[@"time".mÂ·2 - @"time".Month(0x1)] }
+	type @"time".Weekday int
+	func (@"time".dÂ·2 @"time".Weekday) String () (? string) { return @"time".days[@"time".dÂ·2] }
+	type @"time".Time struct { @"time".sec int64; @"time".nsec int32; @"time".loc *@"time".Location }
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") Add (@"time".dÂ·3 @"time".Duration) (? @"time".Time)
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") AddDate (@"time".yearsÂ·3 int, @"time".monthsÂ·4 int, @"time".daysÂ·5 int) (? @"time".Time)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") After (@"time".uÂ·3 @"time".Time "esc:0x0") (? bool) { return @"time".tÂ·2.@"time".sec > @"time".uÂ·3.@"time".sec || @"time".tÂ·2.@"time".sec == @"time".uÂ·3.@"time".sec && @"time".tÂ·2.@"time".nsec > @"time".uÂ·3.@"time".nsec }
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Before (@"time".uÂ·3 @"time".Time "esc:0x0") (? bool) { return @"time".tÂ·2.@"time".sec < @"time".uÂ·3.@"time".sec || @"time".tÂ·2.@"time".sec == @"time".uÂ·3.@"time".sec && @"time".tÂ·2.@"time".nsec < @"time".uÂ·3.@"time".nsec }
+	func (@"time".tÂ·4 @"time".Time "esc:0x0") Clock () (@"time".hourÂ·1 int, @"time".minÂ·2 int, @"time".secÂ·3 int)
+	func (@"time".tÂ·4 @"time".Time "esc:0x0") Date () (@"time".yearÂ·1 int, @"time".monthÂ·2 @"time".Month, @"time".dayÂ·3 int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Day () (? int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Equal (@"time".uÂ·3 @"time".Time "esc:0x0") (? bool) { return @"time".tÂ·2.@"time".sec == @"time".uÂ·3.@"time".sec && @"time".tÂ·2.@"time".nsec == @"time".uÂ·3.@"time".nsec }
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Format (@"time".layoutÂ·3 string "esc:0x0") (? string)
+	func (@"time".tÂ·2 *@"time".Time "esc:0x0") GobDecode (@"time".dataÂ·3 []byte "esc:0x0") (? error)
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") GobEncode () (? []byte, ? error)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Hour () (? int)
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") ISOWeek () (@"time".yearÂ·1 int, @"time".weekÂ·2 int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") In (@"time".locÂ·3 *@"time".Location "esc:0x2") (? @"time".Time)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") IsZero () (? bool) { return @"time".tÂ·2.@"time".sec == 0x0 && @"time".tÂ·2.@"time".nsec == 0x0 }
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") Local () (? @"time".Time) { @"time".tÂ·2.@"time".loc = @"time".Local; return @"time".tÂ·2 }
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") Location () (? *@"time".Location) { var @"time".lÂ·3 *@"time".Location; ; @"time".lÂ·3 = @"time".tÂ·2.@"time".loc; if @"time".lÂ·3 == nil { @"time".lÂ·3 = @"time".UTC }; return @"time".lÂ·3 }
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") MarshalBinary () (? []byte, ? error)
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") MarshalJSON () (? []byte, ? error)
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") MarshalText () (? []byte, ? error)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Minute () (? int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Month () (? @"time".Month)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Nanosecond () (? int) { return int(@"time".tÂ·2.@"time".nsec) }
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") Round (@"time".dÂ·3 @"time".Duration) (? @"time".Time)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Second () (? int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") String () (? string)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Sub (@"time".uÂ·3 @"time".Time "esc:0x0") (? @"time".Duration)
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") Truncate (@"time".dÂ·3 @"time".Duration) (? @"time".Time)
+	func (@"time".tÂ·2 @"time".Time "esc:0x2") UTC () (? @"time".Time) { @"time".tÂ·2.@"time".loc = @"time".UTC; return @"time".tÂ·2 }
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Unix () (? int64) { return @"time".tÂ·2.@"time".sec + -0xE7791F700 }
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") UnixNano () (? int64) { return (@"time".tÂ·2.@"time".sec + -0xE7791F700) * 0x3B9ACA00 + int64(@"time".tÂ·2.@"time".nsec) }
+	func (@"time".tÂ·2 *@"time".Time "esc:0x0") UnmarshalBinary (@"time".dataÂ·3 []byte "esc:0x0") (? error)
+	func (@"time".tÂ·2 *@"time".Time "esc:0x0") UnmarshalJSON (@"time".dataÂ·3 []byte "esc:0x0") (@"time".errÂ·1 error)
+	func (@"time".tÂ·2 *@"time".Time "esc:0x0") UnmarshalText (@"time".dataÂ·3 []byte "esc:0x0") (@"time".errÂ·1 error)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Weekday () (? @"time".Weekday)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") Year () (? int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") YearDay () (? int)
+	func (@"time".tÂ·3 @"time".Time "esc:0x0") Zone () (@"time".nameÂ·1 string, @"time".offsetÂ·2 int)
+	func (@"time".tÂ·2 @"time".Time "esc:0x0") @"time".abs () (? uint64)
+	func (@"time".tÂ·5 @"time".Time "esc:0x0") @"time".date (@"time".fullÂ·6 bool) (@"time".yearÂ·1 int, @"time".monthÂ·2 @"time".Month, @"time".dayÂ·3 int, @"time".ydayÂ·4 int)
+	func (@"time".tÂ·4 @"time".Time "esc:0x1") @"time".locabs () (@"time".nameÂ·1 string, @"time".offsetÂ·2 int, @"time".absÂ·3 uint64)
+	type @"domains".Character struct { Id int; Name string; Age int; Moto string; Description string; City string; Region_id int; Phone string; Adv_phone_id int; Img_orient string; Topic string; Sex string; Created_at @"time".Time; Updated_at @"time".Time; Img_file_name string; Img_content_type string; Img_file_size int; Img_updated_at @"time".Time }
+	type @"log/syslog".Priority int
+	import sync "sync" // indirect
+	type @"sync".Mutex struct { @"sync".state int32; @"sync".sema uint32 }
+	func (@"sync".mÂ·1 *@"sync".Mutex) Lock ()
+	func (@"sync".mÂ·1 *@"sync".Mutex) Unlock ()
+	type @"log/syslog".serverConn interface { @"log/syslog".close() (? error); @"log/syslog".writeString(@"log/syslog".p @"log/syslog".Priority, @"log/syslog".hostname string, @"log/syslog".tag string, @"log/syslog".s string, @"log/syslog".nl string) (? error) }
+	type @"log/syslog".Writer struct { @"log/syslog".priority @"log/syslog".Priority; @"log/syslog".tag string; @"log/syslog".hostname string; @"log/syslog".network string; @"log/syslog".raddr string; @"log/syslog".mu @"sync".Mutex; @"log/syslog".conn @"log/syslog".serverConn }
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Alert (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Close () (? error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Crit (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Debug (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Emerg (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Err (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Info (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Notice (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) Warning (@"log/syslog".mÂ·3 string) (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·3 *@"log/syslog".Writer) Write (@"log/syslog".bÂ·4 []byte "esc:0x0") (? int, ? error)
+	func (@"log/syslog".wÂ·2 *@"log/syslog".Writer) @"log/syslog".connect () (@"log/syslog".errÂ·1 error)
+	func (@"log/syslog".wÂ·3 *@"log/syslog".Writer) @"log/syslog".write (@"log/syslog".pÂ·4 @"log/syslog".Priority, @"log/syslog".msgÂ·5 string) (? int, ? error)
+	func (@"log/syslog".wÂ·3 *@"log/syslog".Writer) @"log/syslog".writeAndRetry (@"log/syslog".pÂ·4 @"log/syslog".Priority, @"log/syslog".sÂ·5 string) (? int, ? error)
+	import driver "database/sql/driver" // indirect
+	type @"database/sql/driver".Tx interface { Commit() (? error); Rollback() (? error) }
+	type @"database/sql/driver".Result interface { LastInsertId() (? int64, ? error); RowsAffected() (? int64, ? error) }
+	type @"database/sql/driver".Value interface {}
+	type @"database/sql/driver".Rows interface { Close() (? error); Columns() (? []string); Next(@"database/sql/driver".dest []@"database/sql/driver".Value) (? error) }
+	type @"database/sql/driver".Stmt interface { Close() (? error); Exec(@"database/sql/driver".args []@"database/sql/driver".Value) (? @"database/sql/driver".Result, ? error); NumInput() (? int); Query(@"database/sql/driver".args []@"database/sql/driver".Value) (? @"database/sql/driver".Rows, ? error) }
+	type @"database/sql/driver".Conn interface { Begin() (? @"database/sql/driver".Tx, ? error); Close() (? error); Prepare(@"database/sql/driver".query string) (? @"database/sql/driver".Stmt, ? error) }
+	type @"database/sql/driver".Driver interface { Open(@"database/sql/driver".name string) (? @"database/sql/driver".Conn, ? error) }
+	type @"database/sql".driverConn struct { @"database/sql".db *@"database/sql".DB; ? @"sync".Mutex; @"database/sql".ci @"database/sql/driver".Conn; @"database/sql".closed bool; @"database/sql".finalClosed bool; @"database/sql".openStmt map[@"database/sql/driver".Stmt]bool; @"database/sql".inUse bool; @"database/sql".onPut []func(); @"database/sql".dbmuClosed bool }
+	func (@"database/sql".dcÂ·2 *@"database/sql".driverConn) Close () (? error)
+	func (@"database/sql".dcÂ·2 *@"database/sql".driverConn) @"database/sql".closeDBLocked () (? func() (? error))
+	func (@"database/sql".dcÂ·2 *@"database/sql".driverConn) @"database/sql".finalClose () (? error)
+	func (@"database/sql".dcÂ·3 *@"database/sql".driverConn) @"database/sql".prepareLocked (@"database/sql".queryÂ·4 string) (? @"database/sql/driver".Stmt, ? error)
+	func (@"database/sql".dcÂ·1 *@"database/sql".driverConn) @"database/sql".releaseConn (@"database/sql".errÂ·2 error "esc:0x0")
+	func (@"database/sql".dcÂ·1 *@"database/sql".driverConn) @"database/sql".removeOpenStmt (@"database/sql".siÂ·2 @"database/sql/driver".Stmt "esc:0x0")
+	type @"database/sql".connRequest struct { @"database/sql".conn *@"database/sql".driverConn; @"database/sql".err error }
+	type @"database/sql".depSet map[interface {}]bool
+	type @"database/sql".finalCloser interface { @"database/sql".finalClose() (? error) }
+	type @"sync".Locker interface { Lock(); Unlock() }
+	type @"sync".RWMutex struct { @"sync".w @"sync".Mutex; @"sync".writerSem uint32; @"sync".readerSem uint32; @"sync".readerCount int32; @"sync".readerWait int32 }
+	func (@"sync".rwÂ·1 *@"sync".RWMutex) Lock ()
+	func (@"sync".rwÂ·1 *@"sync".RWMutex) RLock ()
+	func (@"sync".rwÂ·2 *@"sync".RWMutex "esc:0x2") RLocker () (? @"sync".Locker) { return (*@"sync".rlocker)(@"sync".rwÂ·2) }
+	func (@"sync".rwÂ·1 *@"sync".RWMutex) RUnlock ()
+	func (@"sync".rwÂ·1 *@"sync".RWMutex) Unlock ()
+	type @"database/sql".driverStmt struct { ? @"sync".Locker; @"database/sql".si @"database/sql/driver".Stmt }
+	func (@"database/sql".dsÂ·2 *@"database/sql".driverStmt) Close () (? error)
+	type @"database/sql".connStmt struct { @"database/sql".dc *@"database/sql".driverConn; @"database/sql".si @"database/sql/driver".Stmt }
+	type @"database/sql".Result interface { LastInsertId() (? int64, ? error); RowsAffected() (? int64, ? error) }
+	type @"database/sql".Rows struct { @"database/sql".dc *@"database/sql".driverConn; @"database/sql".releaseConn func(? error); @"database/sql".rowsi @"database/sql/driver".Rows; @"database/sql".closed bool; @"database/sql".lastcols []@"database/sql/driver".Value; @"database/sql".lasterr error; @"database/sql".closeStmt @"database/sql/driver".Stmt }
+	func (@"database/sql".rsÂ·2 *@"database/sql".Rows) Close () (? error)
+	func (@"database/sql".rsÂ·3 *@"database/sql".Rows) Columns () (? []string, ? error)
+	func (@"database/sql".rsÂ·2 *@"database/sql".Rows "esc:0x1") Err () (? error) { if @"database/sql".rsÂ·2.@"database/sql".lasterr == @"io".EOF { return nil }; return @"database/sql".rsÂ·2.@"database/sql".lasterr }
+	func (@"database/sql".rsÂ·2 *@"database/sql".Rows) Next () (? bool)
+	func (@"database/sql".rsÂ·2 *@"database/sql".Rows "esc:0x0") Scan (@"database/sql".destÂ·3 ...interface {} "esc:0x0") (? error)
+	type @"database/sql".Row struct { @"database/sql".err error; @"database/sql".rows *@"database/sql".Rows }
+	func (@"database/sql".rÂ·2 *@"database/sql".Row) Scan (@"database/sql".destÂ·3 ...interface {} "esc:0x0") (? error)
+	type @"database/sql".Stmt struct { @"database/sql".db *@"database/sql".DB; @"database/sql".query string; @"database/sql".stickyErr error; @"database/sql".closemu @"sync".RWMutex; @"database/sql".tx *@"database/sql".Tx; @"database/sql".txsi *@"database/sql".driverStmt; @"database/sql".mu @"sync".Mutex; @"database/sql".closed bool; @"database/sql".css []@"database/sql".connStmt }
+	func (@"database/sql".sÂ·2 *@"database/sql".Stmt) Close () (? error)
+	func (@"database/sql".sÂ·3 *@"database/sql".Stmt) Exec (@"database/sql".argsÂ·4 ...interface {} "esc:0x0") (? @"database/sql".Result, ? error)
+	func (@"database/sql".sÂ·3 *@"database/sql".Stmt) Query (@"database/sql".argsÂ·4 ...interface {} "esc:0x0") (? *@"database/sql".Rows, ? error)
+	func (@"database/sql".sÂ·2 *@"database/sql".Stmt) QueryRow (@"database/sql".argsÂ·3 ...interface {} "esc:0x0") (? *@"database/sql".Row)
+	func (@"database/sql".sÂ·5 *@"database/sql".Stmt) @"database/sql".connStmt () (@"database/sql".ciÂ·1 *@"database/sql".driverConn, @"database/sql".releaseConnÂ·2 func(? error), @"database/sql".siÂ·3 @"database/sql/driver".Stmt, @"database/sql".errÂ·4 error)
+	func (@"database/sql".sÂ·2 *@"database/sql".Stmt) @"database/sql".finalClose () (? error)
+	type @"database/sql".Tx struct { @"database/sql".db *@"database/sql".DB; @"database/sql".dc *@"database/sql".driverConn; @"database/sql".txi @"database/sql/driver".Tx; @"database/sql".done bool; @"database/sql".stmts struct { ? @"sync".Mutex; @"database/sql".v []*@"database/sql".Stmt } }
+	func (@"database/sql".txÂ·2 *@"database/sql".Tx) Commit () (? error)
+	func (@"database/sql".txÂ·3 *@"database/sql".Tx) Exec (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 ...interface {} "esc:0x0") (? @"database/sql".Result, ? error)
+	func (@"database/sql".txÂ·3 *@"database/sql".Tx) Prepare (@"database/sql".queryÂ·4 string) (? *@"database/sql".Stmt, ? error)
+	func (@"database/sql".txÂ·3 *@"database/sql".Tx) Query (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 ...interface {} "esc:0x0") (? *@"database/sql".Rows, ? error)
+	func (@"database/sql".txÂ·2 *@"database/sql".Tx) QueryRow (@"database/sql".queryÂ·3 string, @"database/sql".argsÂ·4 ...interface {} "esc:0x0") (? *@"database/sql".Row)
+	func (@"database/sql".txÂ·2 *@"database/sql".Tx) Rollback () (? error)
+	func (@"database/sql".txÂ·2 *@"database/sql".Tx) Stmt (@"database/sql".stmtÂ·3 *@"database/sql".Stmt) (? *@"database/sql".Stmt)
+	func (@"database/sql".txÂ·1 *@"database/sql".Tx) @"database/sql".close ()
+	func (@"database/sql".txÂ·1 *@"database/sql".Tx) @"database/sql".closePrepared ()
+	func (@"database/sql".txÂ·3 *@"database/sql".Tx "esc:0x1") @"database/sql".grabConn () (? *@"database/sql".driverConn, ? error) { if @"database/sql".txÂ·3.@"database/sql".done { return nil, @"database/sql".ErrTxDone }; return @"database/sql".txÂ·3.@"database/sql".dc, nil }
+	type @"database/sql".DB struct { @"database/sql".driver @"database/sql/driver".Driver; @"database/sql".dsn string; @"database/sql".mu @"sync".Mutex; @"database/sql".freeConn []*@"database/sql".driverConn; @"database/sql".connRequests []chan @"database/sql".connRequest; @"database/sql".numOpen int; @"database/sql".pendingOpens int; @"database/sql".openerCh chan struct {}; @"database/sql".closed bool; @"database/sql".dep map[@"database/sql".finalCloser]@"database/sql".depSet; @"database/sql".lastPut map[*@"database/sql".driverConn]string; @"database/sql".maxIdle int; @"database/sql".maxOpen int }
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) Begin () (? *@"database/sql".Tx, ? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB) Close () (? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB "esc:0x1") Driver () (? @"database/sql/driver".Driver) { return @"database/sql".dbÂ·2.@"database/sql".driver }
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) Exec (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 ...interface {} "esc:0x0") (? @"database/sql".Result, ? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB) Ping () (? error)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) Prepare (@"database/sql".queryÂ·4 string) (? *@"database/sql".Stmt, ? error)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) Query (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 ...interface {} "esc:0x0") (? *@"database/sql".Rows, ? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB) QueryRow (@"database/sql".queryÂ·3 string, @"database/sql".argsÂ·4 ...interface {} "esc:0x0") (? *@"database/sql".Row)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) SetMaxIdleConns (@"database/sql".nÂ·2 int)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) SetMaxOpenConns (@"database/sql".nÂ·2 int)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) @"database/sql".addDep (@"database/sql".xÂ·2 @"database/sql".finalCloser, @"database/sql".depÂ·3 interface {})
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB "esc:0x0") @"database/sql".addDepLocked (@"database/sql".xÂ·2 @"database/sql".finalCloser, @"database/sql".depÂ·3 interface {})
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".begin () (@"database/sql".txÂ·1 *@"database/sql".Tx, @"database/sql".errÂ·2 error)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".conn () (? *@"database/sql".driverConn, ? error)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".connIfFree (@"database/sql".wantedÂ·4 *@"database/sql".driverConn "esc:0x2") (? *@"database/sql".driverConn, ? error)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) @"database/sql".connectionOpener ()
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".exec (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 []interface {} "esc:0x0") (@"database/sql".resÂ·1 @"database/sql".Result, @"database/sql".errÂ·2 error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB "esc:0x0") @"database/sql".maxIdleConnsLocked () (? int)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB "esc:0x0") @"database/sql".maybeOpenNewConnections ()
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) @"database/sql".noteUnusedDriverStatement (@"database/sql".cÂ·2 *@"database/sql".driverConn, @"database/sql".siÂ·3 @"database/sql/driver".Stmt)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) @"database/sql".openNewConnection ()
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".prepare (@"database/sql".queryÂ·4 string) (? *@"database/sql".Stmt, ? error)
+	func (@"database/sql".dbÂ·1 *@"database/sql".DB) @"database/sql".putConn (@"database/sql".dcÂ·2 *@"database/sql".driverConn, @"database/sql".errÂ·3 error "esc:0x0")
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB) @"database/sql".putConnDBLocked (@"database/sql".dcÂ·3 *@"database/sql".driverConn, @"database/sql".errÂ·4 error) (? bool)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB) @"database/sql".query (@"database/sql".queryÂ·4 string, @"database/sql".argsÂ·5 []interface {} "esc:0x0") (? *@"database/sql".Rows, ? error)
+	func (@"database/sql".dbÂ·3 *@"database/sql".DB "esc:0x0") @"database/sql".queryConn (@"database/sql".dcÂ·4 *@"database/sql".driverConn, @"database/sql".releaseConnÂ·5 func(? error), @"database/sql".queryÂ·6 string, @"database/sql".argsÂ·7 []interface {} "esc:0x0") (? *@"database/sql".Rows, ? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB) @"database/sql".removeDep (@"database/sql".xÂ·3 @"database/sql".finalCloser, @"database/sql".depÂ·4 interface {}) (? error)
+	func (@"database/sql".dbÂ·2 *@"database/sql".DB "esc:0x0") @"database/sql".removeDepLocked (@"database/sql".xÂ·3 @"database/sql".finalCloser, @"database/sql".depÂ·4 interface {}) (? func() (? error))
+	func @"".GetAllLinks (@"".gologÂ·2 @"log/syslog".Writer, @"".dbÂ·3 @"database/sql".DB) (? []@"domains".Character)
+	func @"".init ()
+	var @"time".months [12]string
+	var @"time".days [7]string
+	var @"time".Local *@"time".Location
+	var @"time".UTC *@"time".Location
+	type @"sync".rlocker struct { @"sync".w @"sync".Mutex; @"sync".writerSem uint32; @"sync".readerSem uint32; @"sync".readerCount int32; @"sync".readerWait int32 }
+	func (@"sync".rÂ·1 *@"sync".rlocker) Lock ()
+	func (@"sync".rÂ·1 *@"sync".rlocker) Unlock ()
+	import io "io" // indirect
+	var @"io".EOF error
+	var @"database/sql".ErrTxDone error
+
+$$
+_go_.6          0           0     0     644     13037     `
+go object linux amd64 go1.4.1 X:precisestack
+
+!
+  go13lddatabase/sql.adomains.a@github.com/go-sql-driver/mysql.alog/syslog.a ş"".GetAllLinks     ŠdH‹%    H„$˜şÿÿH;Awè    ëâHìè  H    H‰$è    H‹\$H‰œ$Ğ   H‹œ$Ğ   H¬$ğ  H‰ßH‰îè    H    H‰$è    H‹\$H‰œ$Ø   H‹œ$Ø   H¬$P  H‰ßH‰îè    HÇ„$è      HÇ„$ğ      HÇ„$ø      H    H‹+H‰¬$è   H‹kH‰¬$ğ   H‹œ$Ø   H‰$H‹œ$è   H‰\$H‹œ$ğ   H‰\$H\$HÇ    HÇC    HÇC    è    H‹\$0H‰œ$    H‹\$8H‰œ$ø   H‹\$@H‰œ$   Hƒ¼$ø    tiH‹œ$   H‰$H‹œ$ø   Hƒû „P  H‹[ ÿÓH‹\$H‰œ$X  H‹\$H‰œ$`  H‹œ$Ğ   H‰$H‹œ$X  H‰\$H‹œ$`  H‰\$è    H‹œ$    H‰$H    Qjè    YYH…À…Ñ  HÇ„$h      HÇ„$p      HÇ„$x      H‹œ$    H‰$è    Š\$ˆ\$O€|$O „K  H    H‰$è    H‹\$H‰œ$à   H‹œ$à   H‰œ$È   H‹œ$à   H‰œ$À   Hƒ„$À    H¼$È  1Àè    Hœ$È  H‰œ$¸   H‹œ$¸   H‰\$xHƒ|$x „Á  HÇD$p   HÇD$h   H‹\$xH‰œ$˜  H‹\$pH‰œ$   H‹\$hH‰œ$¨  H‹œ$˜  H‰$H‹œ$È   H‰œ$°   H‹œ$°   H‰œ$0  H    H‰œ$(  H‹œ$(  H‰\$H‹œ$0  H‰\$è    H‹œ$˜  HƒÃH‰$H‹œ$À   H‰œ$¨   H‹œ$¨   H‰œ$   H    H‰œ$  H‹œ$  H‰\$H‹œ$   H‰\$è    H‹œ$    H‰$H‹œ$˜  H‰\$H‹œ$   H‰\$H‹œ$¨  H‰\$è    H‹\$ H‰œ$H  H‹\$(H‰œ$P  H‹œ$H  H‰œ$  H‹œ$P  H‰œ$  Hƒ¼$   tiH‹œ$  H‰$H‹œ$  Hƒû „.  H‹[ ÿÓH‹\$H‰œ$8  H‹\$H‰œ$@  H‹œ$Ğ   H‰$H‹œ$8  H‰\$H‹œ$@  H‰\$è    H‹œ$h  H‰œ$€  H‹œ$p  H‰œ$ˆ  H‹œ$x  H‰œ$  H‹œ$  H‹¬$ˆ  H)ëHƒû}gH    H‰$H‹œ$€  H‰\$H‹œ$ˆ  H‰\$H‹œ$  H‰\$HÇD$    è    H‹\$(H‰œ$€  H‹\$0H‰œ$ˆ  H‹\$8H‰œ$  H‹œ$ˆ  H‰œ$˜   H‹œ$˜   HƒÃH‰œ$   H‹œ$  H‰œ$ˆ   H‹œ$   H‰œ$€   H‹œ$€  H‰\$`H‹œ$€   H‰\$XH‹œ$ˆ   H‰\$PH‹\$`H‰œ$€  H‹\$XH‰œ$ˆ  H‹\$PH‰œ$  H    H‰$H‹œ$€  H‹¬$˜   Hií  HëH‰\$H‹œ$à   H‰\$è    H‹œ$€  H‰œ$°  H‹œ$ˆ  H‰œ$¸  H‹œ$  H‰œ$À  H‹œ$°  H‰œ$h  H‹œ$¸  H‰œ$p  H‹œ$À  H‰œ$x  é¤ûÿÿ‰éËıÿÿ‰%    é3üÿÿH‹œ$h  H‰œ$è  H‹œ$p  H‰œ$ğ  H‹œ$x  H‰œ$ø  è    HÄè  Ãè    HÄè  Ã‰é©úÿÿ>
+      0  0runtime.morestack_noctxt   P  ,type.log/syslog.Writer   b  "runtime.newobject   ²°  runtime.duffcopy   À  (type.database/sql.DB   Ò  "runtime.newobject   ¢ì  runtime.duffcopy   ø  Şgo.string."select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit 50"   ´  0database/sql.(*DB).Query   ä 
+      ê  0log/syslog.(*Writer).Err     :database/sql.(*Rows).CloseÂ·f      "runtime.deferproc      2database/sql.(*Rows).Next   Ô  ,type.domains.Character   æ  "runtime.newobject   ğ	ğ  runtime.duffzero   š  type.*int   è  2runtime.writebarrieriface   Ö  type.*string   ¤  2runtime.writebarrieriface   ”  2database/sql.(*Rows).Scan   ê 
+      ğ  0log/syslog.(*Writer).Err     0type.[]domains.Character   ‚  "runtime.growslice   ‚  ,type.domains.Character   ì  .runtime.writebarrierfat   È  &runtime.deferreturn   ä  &runtime.deferreturn    Ğ  0"".autotmp_0017 Ïtype.uint64 "".autotmp_0016 ¿type.uint64 "".autotmp_0015 ¯type.int "".autotmp_0014 Ÿtype.int "".autotmp_0013 Ï0type.[]domains.Character "".autotmp_0012 ß*type.*[2]interface {} "".autotmp_0011 Ÿ&type.[]interface {} "".autotmp_0010 o0type.[]domains.Character "".autotmp_0009 ßtype.string "".autotmp_0008 ¿type.error "".autotmp_0007 Ïtype.*string "".autotmp_0006 ¿type.*int "".autotmp_0005 ?(type.[2]interface {} "".autotmp_0004 ±type.bool "".autotmp_0003 Ÿtype.string "".&ch .type.*domains.Character "".&golog ¯.type.*log/syslog.Writer "".&db Ÿ*type.*database/sql.DB "".err ¿type.error "".characters ÿ0type.[]domains.Character "".err ßtype.error "".rows .type.*database/sql.Rows "".sqlstr ÿtype.string "".~r2 ğ0type.[]domains.Character 8%Ğ¨Ù	ÏĞÏĞ Ğ T¹ni&$$ÄiŞ>! B 08±Y¤^8lËõ­. TgclocalsÂ·0ec30297ce7f3744c6dcd4498ee80a92 TgclocalsÂ·719c9c73e71507f477703e4dafed0540   ‚/home/juno/git/imagehoster/src/sitemap_maker/getLinks/getLinks.goş"".init  À  ®dH‹%    H;awè    ëêŠ    €û tŠ    €ûuÃè    Æ    è    è    è    è    Æ    Ã
+         0runtime.morestack_noctxt   0  "".initdoneÂ·   F  "".initdoneÂ·   \  "runtime.throwinit   l "".initdoneÂ·   x  log/syslog.init   ‚  Fgithub.com/go-sql-driver/mysql.init   Œ  domains.init   –  "database/sql.init   ¢ "".initdoneÂ·        ` ` J` 
+ -3 TgclocalsÂ·3280bececceccd33cb74587feedb1f9f TgclocalsÂ·3280bececceccd33cb74587feedb1f9f   ‚/home/juno/git/imagehoster/src/sitemap_maker/getLinks/getLinks.goş4type..hash.[2]interface {} €  ædH‹%    H;awè    ëêHƒì@HÇD$`    HÇD$0    HÇD$(   H‹\$0H‹l$(H9ë˜   H‹\$0H‰\$ H‹\$XHÁÃH‰\$XH»¿c»kïR H‹l$XH¯İH‰\$XH‹\$HHƒû tlH‹l$ HkíHëH‰$HÇD$   H‹\$XH‰\$è    H‹\$H‰\$8H‹\$8H‰\$XH‹\$0HƒÃH‰\$0H‹\$0H‹l$(H9ëŒhÿÿÿH‹\$XH‰\$`HƒÄ@Ã‰ë
+         0runtime.morestack_noctxt   Î  (runtime.nilinterhash   @€  "".autotmp_0030 /type.int "".autotmp_0029 type.int "".autotmp_0028 type.uintptr "".i ?type.int "".~r3 0type.uintptr "".h  type.uintptr "".s type.uintptr "".p  *type.*[2]interface {} €Ô€ € €  ¦Z TgclocalsÂ·2dc77d960dd3e4b3de2361f9cbd75783 TgclocalsÂ·3280bececceccd33cb74587feedb1f9f   ‚/home/juno/git/imagehoster/src/sitemap_maker/getLinks/getLinks.goş0type..eq.[2]interface {} €  ìdH‹%    H;awè    ëêHƒì`Æ„$€    HÇD$8    HÇD$0   H‹\$8H‹l$0H9ëÇ   H‹\$8H‰\$(H‹\$pHƒû „Ï   H‹l$(HkíHëH‹+H‰l$PH‹kH‰l$XH‹\$hHƒû „œ   H‹l$(HkíHëH‹+H‰l$@H‹kH‰l$HH‹\$@H‹l$PH9ëucH‹l$@H‰,$H‹l$HH‰l$H‹l$PH‰l$H‹l$XH‰l$è    Š\$ €û t.H‹\$8HƒÃH‰\$8H‹\$8H‹l$0H9ëŒ9ÿÿÿÆ„$€   HƒÄ`ÃÆ„$€    HƒÄ`Ã‰é]ÿÿÿ‰é*ÿÿÿ
+         0runtime.morestack_noctxt   À  runtime.efaceeq   @À  "".autotmp_0034 ?"type.interface {} "".autotmp_0033 "type.interface {} "".autotmp_0032 _type.int "".autotmp_0031 Otype.int "".i otype.int "".~r3 0type.bool "".s  type.uintptr "".q *type.*[2]interface {} "".p  *type.*[2]interface {} &À€¿À¿À À À  ßa TgclocalsÂ·9c703c5c7b9c1932c840b69f8ebce236 TgclocalsÂ·44568aa369055d8938d809aa5d80843b   ‚/home/juno/git/imagehoster/src/sitemap_maker/getLinks/getLinks.goşŞgo.string."select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit 50" ğ  è        c       select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit 50    Şgo.string."select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit 50"   şTgclocalsÂ·719c9c73e71507f477703e4dafed0540 °  °   R                                                                        "   € ü     € ü       ü                               şTgclocalsÂ·0ec30297ce7f3744c6dcd4498ee80a92 °  °   D   ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™–    ‰ˆ´+	B™–    ‰ˆ´+	B™–    ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™    ‰ˆ´+	B™     şTgclocalsÂ·3280bececceccd33cb74587feedb1f9f           şTgclocalsÂ·3280bececceccd33cb74587feedb1f9f           ş,"".initdoneÂ·  type.uint8   ş""".GetAllLinksÂ·f              "".GetAllLinks   ş(runtime.newobjectÂ·f              "runtime.newobject   ş6database/sql.(*DB).QueryÂ·f              0database/sql.(*DB).Query   ş6log/syslog.(*Writer).ErrÂ·f              0log/syslog.(*Writer).Err   ş:database/sql.(*Rows).CloseÂ·f              4database/sql.(*Rows).Close   ş(runtime.deferprocÂ·f              "runtime.deferproc   ş,runtime.deferreturnÂ·f              &runtime.deferreturn   ş8database/sql.(*Rows).NextÂ·f              2database/sql.(*Rows).Next   ş8runtime.writebarrierifaceÂ·f              2runtime.writebarrieriface   ş8database/sql.(*Rows).ScanÂ·f              2database/sql.(*Rows).Scan   ş(runtime.growsliceÂ·f              "runtime.growslice   ş4runtime.writebarrierfatÂ·f              .runtime.writebarrierfat   ş,runtime.throwreturnÂ·f              &runtime.throwreturn   ş"".initÂ·f              "".init   ş(runtime.throwinitÂ·f              "runtime.throwinit   ş$log/syslog.initÂ·f              log/syslog.init   şLgithub.com/go-sql-driver/mysql.initÂ·f              Fgithub.com/go-sql-driver/mysql.init   şdomains.initÂ·f              domains.init   ş(database/sql.initÂ·f              "database/sql.init   şbruntime.gcbits.0x48844400000000000000000000000000     H„D              ş>go.string."[]domains.Character" P  H               []domains.Character    >go.string."[]domains.Character"   ş0type.[]domains.Character            A“Œ                                                                     runtime.algarray   0  bruntime.gcbits.0x48844400000000000000000000000000   P  >go.string."[]domains.Character"   p  Bgo.weak.type.*[]domains.Character   €  "runtime.zerovalue     ,type.domains.Character   şfgo.typelink.[]domains.Character/[]domains.Character              0type.[]domains.Character   şbruntime.gcbits.0xcc000000000000000000000000000000     Ì                ş0go.string."interface {}" @  :               interface {}    0go.string."interface {}"   ş"type.interface {} À  À       çW                                                                                   €  runtime.algarray   0  bruntime.gcbits.0xcc000000000000000000000000000000   P  0go.string."interface {}"   p  4go.weak.type.*interface {}   €  "runtime.zerovalue   À "type.interface {}   ş4go.string."[]interface {}" @  >               []interface {}    4go.string."[]interface {}"   ş&type.[]interface {}            p“ê/                                                                     runtime.algarray   0  bruntime.gcbits.0x48844400000000000000000000000000   P  4go.string."[]interface {}"   p  8go.weak.type.*[]interface {}   €  "runtime.zerovalue     "type.interface {}   şRgo.typelink.[]interface {}/[]interface {}              &type.[]interface {}   şTgclocalsÂ·3280bececceccd33cb74587feedb1f9f           şTgclocalsÂ·2dc77d960dd3e4b3de2361f9cbd75783             şTgclocalsÂ·44568aa369055d8938d809aa5d80843b              şTgclocalsÂ·9c703c5c7b9c1932c840b69f8ebce236             ş<type..hashfunc.[2]interface {}              4type..hash.[2]interface {}   ş8type..eqfunc.[2]interface {}              0type..eq.[2]interface {}   ş2type..alg.[2]interface {}                        <type..hashfunc.[2]interface {}     8type..eqfunc.[2]interface {}   şbruntime.gcbits.0xcccc0000000000000000000000000000     ÌÌ               ş6go.string."[2]interface {}" @  @               [2]interface {}    6go.string."[2]interface {}"   ş(type.[2]interface {} À  À        ,Y¤ñ                                                                                   2type..alg.[2]interface {}   0  bruntime.gcbits.0xcccc0000000000000000000000000000   P  6go.string."[2]interface {}"   p  :go.weak.type.*[2]interface {}   €  "runtime.zerovalue     "type.interface {}      &type.[]interface {}   şVgo.typelink.[2]interface {}/[2]interface {}              (type.[2]interface {}   şbruntime.gcbits.0x88000000000000000000000000000000     ˆ                ş8go.string."*[2]interface {}" P  B               *[2]interface {}    8go.string."*[2]interface {}"   ş*type.*[2]interface {}            ¾s-q 6                                                                    runtime.algarray   0  bruntime.gcbits.0x88000000000000000000000000000000   P  8go.string."*[2]interface {}"   p  <go.weak.type.**[2]interface {}   €  "runtime.zerovalue     (type.[2]interface {}   ş&go.string."runtime" 0  0               runtime    &go.string."runtime"   ş,go.importpath.runtime.                       &go.string."runtime"   ş0go.string."database/sql" @  :               database/sql    0go.string."database/sql"   ş6go.importpath.database/sql.                       0go.string."database/sql"   ş&go.string."domains" 0  0               domains    &go.string."domains"   ş,go.importpath.domains.                       &go.string."domains"   ş,go.string."log/syslog" @  6        
+       log/syslog    ,go.string."log/syslog"   ş2go.importpath.log/syslog.             
+          ,go.string."log/syslog"   şTgo.string."github.com/go-sql-driver/mysql" `  ^               github.com/go-sql-driver/mysql    Tgo.string."github.com/go-sql-driver/mysql"   şZgo.importpath.github.com/go-sql-driver/mysql.                       Tgo.string."github.com/go-sql-driver/mysql"   ş:type..hash.[2]interface {}Â·f              4type..hash.[2]interface {}   ş.runtime.nilinterhashÂ·f              (runtime.nilinterhash   ş6type..eq.[2]interface {}Â·f              0type..eq.[2]interface {}   ş$runtime.efaceeqÂ·f              runtime.efaceeq   ş"runtime.zerovalue      ÿÿgo13ld 
