@@ -5,11 +5,13 @@ import (
 	"domains"
 	_ "github.com/go-sql-driver/mysql"
 	"log/syslog"
+	"strconv"
 )
 
-func GetAllLinks(golog syslog.Writer, db sql.DB) []domains.Character {
+func GetAllLinks(golog syslog.Writer, db sql.DB,limit int) []domains.Character {
 
-	sqlstr := "select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit 50"
+	limitstr :=strconv.Itoa(limit)
+	sqlstr := "select Id,Moto from characters where topic='sex' and sex='female' order by Created_at desc limit "+limitstr
 
 	rows, err := db.Query(sqlstr)
 	if err != nil {

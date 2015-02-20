@@ -18,6 +18,7 @@ type Page struct {
 	XMLName xml.Name `xml:"url"`
 	Loc     string   `xml:"loc"`
 	Lastmod string   `xml:"lastmod"`
+	Changefreq string `xml:"changefreq"`
 	//	Name       string   `xml:"news:news>news:publication>news:name"`
 	//	Language   string   `xml:"news:news>news:publication>news:language"`
 	//	Title      string   `xml:"news:news>news:title"`

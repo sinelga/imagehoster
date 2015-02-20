@@ -42,7 +42,6 @@ func FindFromQ(golog syslog.Writer, locale string, themes string,config domains.
 
 			}
 			
-
 		} else {
 
 			golog.Crit("need more free paragraphs!!!!")

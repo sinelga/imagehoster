@@ -1,4 +1,4 @@
 #! /bin/bash
 
-cd /home/juno/imagehoster
+cd /home/juno/git/imagehoster
 bin/gojiapp

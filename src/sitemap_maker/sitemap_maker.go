@@ -22,17 +22,22 @@ import (
 	"sitemap_maker/getLinks"
 )
 
-const APP_VERSION = "0.1"
+//const APP_VERSION = "0.1"
 
 // The flag package provides a default help printer via -h switch
-var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
+//var versionFlag *bool = flag.Bool("v", false, "Print the version number.")
+var domainFlag = flag.String("domain", "", "must be test.com www.test.com")
+var limitFlag = flag.Int("limit", 0, "if not will be 0")
 
 func main() {
 	flag.Parse() // Scan the arguments list
 
-	if *versionFlag {
-		fmt.Println("Version:", APP_VERSION)
-	}
+	//	if *versionFlag {
+	//		fmt.Println("Version:", APP_VERSION)
+	//	}
+
+	domain := *domainFlag
+	limit := *limitFlag
 
 	golog, config := startones.Start()
 
@@ -42,33 +47,28 @@ func main() {
 	}
 	defer db.Close()
 
-	characters := getLinks.GetAllLinks(golog, *db)
+	characters := getLinks.GetAllLinks(golog, *db, limit)
 
 	var Url *url.URL
-//	Url, err = url.Parse("http://teinit.info")
-//	if err != nil {
-//		panic("boom")
-//	}
 
 	docList := new(domains.Pages)
 	docList.XmlNS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
 	for _, character := range characters {
-		
-			Url, err = url.Parse("http://teinit.info")
-	if err != nil {
-		panic("boom")
-	}
+
+		Url, err = url.Parse("http://"+domain)
+		if err != nil {
+			panic("boom")
+		}
 
 		Url.Path += "/" + strconv.Itoa(character.Id) + "/" + character.Moto
 
 		doc := new(domains.Page)
 		doc.Loc = Url.String()
 		doc.Lastmod = time.Now().Local().Format(time.RFC3339)
+		doc.Changefreq="daily" 
 
 		docList.Pages = append(docList.Pages, doc)
-
-//		fmt.Println(character.Moto)
 
 	}
 
@@ -77,9 +77,7 @@ func main() {
 
 		golog.Crit(err.Error())
 	}
-	
+
 	fmt.Println(string(resultXml))
-	
-	
 
 }
