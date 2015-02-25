@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"fmt"
+//	"fmt"
 	"github.com/zenazn/goji/web"
 //	"image"
 	"image/jpeg"
@@ -47,7 +47,7 @@ func ImageShow(c web.C, w http.ResponseWriter, r *http.Request) {
 
 	filestr := config.Store.StoreDir + id + "/original/" + imgfile
 
-	fmt.Println(filestr)
+//	fmt.Println(filestr)
 
 	file, err := imaging.Open(filestr)
 //	defer file.Close()

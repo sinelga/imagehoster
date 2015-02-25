@@ -1,6 +1,6 @@
 !<arch>
 __.PKGDEF       0           0     0     644     10712     `
-go object linux amd64 go1.4.1 X:precisestack
+go object linux amd64 go1.4.2 X:precisestack
 
 $$
 package find_all_characters
@@ -102,7 +102,7 @@ package find_all_characters
 
 $$
 _go_.6          0           0     0     644     17338     `
-go object linux amd64 go1.4.1 X:precisestack
+go object linux amd64 go1.4.2 X:precisestack
 
 !
   go13lddomains.alog/syslog.adatabase/sql.a@github.com/go-sql-driver/mysql.a ş"".FindAll  à8  È8dH‹%    H„$øûÿÿH;Awè    ëâHìˆ  H    H‰$è    H‹\$H‰œ$¸  H‹œ$¸  H¬$  H‰ßH‰îè    HÇ„$0      HÇ„$8      HÇ„$@      H    H,$H‰ïH‰ŞH¥H¥Hœ$ğ  Hl$H‰ïH‰ŞH¥H¥è    H‹\$ H‰œ$¨   H‹\$(H‰œ$Ø  H‹\$0H‰œ$à  Hƒ¼$Ø   tiH‹œ$à  H‰$H‹œ$Ø  Hƒû „  H‹[ ÿÓH‹\$H‰œ$  H‹\$H‰œ$   H‹œ$¸  H‰$H‹œ$  H‰\$H‹œ$   H‰\$è    H‹œ$¨   H‰$H    Qjè    YYH…À…œ  H‹œ$¨   H‰$H    Hl$H‰ïH‰ŞH¥H¥H\$HÇ    HÇC    HÇC    è    H‹\$0H‰œ$    H‹\$8H‰œ$Ø  H‹\$@H‰œ$à  Hƒ¼$Ø   tiH‹œ$à  H‰$H‹œ$Ø  Hƒû „  H‹[ ÿÓH‹\$H‰œ$  H‹\$H‰œ$  H‹œ$¸  H‰$H‹œ$  H‰\$H‹œ$  H‰\$è    H‹œ$    H‰$H    Qjè    YYH…À…ƒ  HÇ„$(      HÇ„$0      HÇ„$8      H‹œ$    H‰$è    Š\$ˆ\$O€|$O „ı
