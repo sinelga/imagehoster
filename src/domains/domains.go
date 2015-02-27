@@ -68,6 +68,32 @@ type Character struct {
 	Img_updated_at   time.Time
 }
 
+
+type CharacterRedis struct {
+	Id               int
+	Name             string
+	Age              int
+	Moto             string
+	Description      string
+	City             string
+	Region        string
+	Phone            string
+	Adv_phone     string
+	Created_at       time.Time
+	Img_file_name    string
+
+}
+
+//type Characters struct {
+//	
+//	CharactersRedis []CharacterRedis
+//	
+//}
+
+
+
+
+
 type Paragraph struct {
 	Ptitle     string
 	Pphrase    string
