@@ -11,7 +11,7 @@ func TestFind_all_img(t *testing.T) {
 	var  ch  Characters
 	
 	ch.Find_all_img(dir)
-	ch.Add_name_name_location()
+//	ch.Add_name_name_location()
 		
 	
 

@@ -2,37 +2,39 @@ package find_regions
 
 import (
 	"database/sql"
-	"domains"
-	_ "github.com/go-sql-driver/mysql"
+//	"domains"
+//	_ "github.com/go-sql-driver/mysql"
 	"log/syslog"
 )
 
-func FindAll(golog syslog.Writer, config domains.Config) []int {
+func FindAll(golog syslog.Writer, db sql.DB) []string {
 
-	db, err := sql.Open("mysql", config.Database.ConStr)
-	if err != nil {
-		golog.Err(err.Error())
-	}
-	defer db.Close()
+var citys []string
 
-	rows, err := db.Query("select id from adv_phones")
+if 	rows, err := db.Query("select city from regions"); err !=nil {
+	golog.Crit(err.Error())
+	
+	
+} else {
 
-	var regions_id []int
+	
 
 	for rows.Next() {
 
-		var id int
-		if err := rows.Scan(&id); err != nil {
+		var city string
+		if err := rows.Scan(&city); err != nil {
 
 			golog.Err(err.Error())
 
 		} else {
-			regions_id = append(regions_id, id)
+			citys = append(citys, city)
 
 		}
 
 	}
+	
+	}
 
-	return regions_id
+	return citys
 
 }
