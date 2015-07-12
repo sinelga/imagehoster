@@ -78,19 +78,10 @@ type CharacterRedis struct {
 	City             string
 	Region        string
 	Phone            string
-	Adv_phone     string
 	Created_at       time.Time
 	Img_file_name    string
 
 }
-
-//type Characters struct {
-//	
-//	CharactersRedis []CharacterRedis
-//	
-//}
-
-
 
 
 

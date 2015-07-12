@@ -175,17 +175,6 @@ func main() {
 			}
 			//		log.Println(imageConf.Height,imageConf.Width)
 			fmt.Println("DIMENTIONS", imageConf.Height, "X", imageConf.Width)
-			//			var format string
-			//
-			//			if imageConf.Width > imageConf.Height {
-			//
-			//				format = "landscape"
-			//
-			//			} else {
-			//
-			//				format ="portret"
-			//
-			//			}
 
 			if err != nil {
 				return http.StatusInternalServerError, err.Error()

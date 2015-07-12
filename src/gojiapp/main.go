@@ -39,6 +39,5 @@ func main() {
 	goji.Options("/upload",handlers.MakeUpload)	
 	goji.Post("/upload",handlers.MakeUpload) 
 	
-
 	goji.Serve()
 }

@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"net/url"
 	"startones"
-	"io/ioutil"
-//	"encoding/json"
-//	"domains"
+	"io/ioutil"	
+
 )
 
 func GetChatAnswer(c web.C, w http.ResponseWriter, r *http.Request) {

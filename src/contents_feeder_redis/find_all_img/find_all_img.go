@@ -3,7 +3,11 @@ package find_all_img
 import (
 	"domains"
 	//	"fmt"
+	"contents_feeder_redis/findfreeparagraph"
+	"contents_feeder_redis/insert_local_redis"
 	"database/sql"
+//	"encoding/json"
+	"github.com/garyburd/redigo/redis"
 	"log/syslog"
 	"math/rand"
 	"os"
@@ -23,7 +27,7 @@ var imgfiles [][]string
 func walkpath(pathstr string, f os.FileInfo, err error) error {
 
 	if !f.IsDir() {
-	
+
 		dir, file := path.Split(pathstr)
 		dirscplit := strings.Split(dir, "/")
 		id := dirscplit[len(dirscplit)-3]
@@ -96,8 +100,8 @@ func (characters *Characters) Find_age(golog syslog.Writer, db sql.DB) {
 					golog.Err(err.Error())
 
 				} else {
-					
-					characters.CharactersRedis[i].Age=age
+
+					characters.CharactersRedis[i].Age = age
 
 				}
 
@@ -105,6 +109,44 @@ func (characters *Characters) Find_age(golog syslog.Writer, db sql.DB) {
 
 		}
 
+	}
+
+}
+
+func (characters *Characters) Find_free_paragraph(golog syslog.Writer, c redis.Conn, locale string, themes string) {
+
+	for i, _ := range characters.CharactersRedis {
+
+		paragraph := findfreeparagraph.FindFromQ(golog, c, locale, themes)
+
+		characters.CharactersRedis[i].Moto = paragraph.Ptitle
+
+		s := []string{paragraph.Pphrase, paragraph.Sentences[0], paragraph.Sentences[1], paragraph.Sentences[2], paragraph.Sentences[3]}
+		description := strings.Join(s, " ")
+		characters.CharactersRedis[i].Description = description
+
+	}
+
+}
+
+func (characters *Characters) Create_local_charters(golog syslog.Writer, site string,deltahours int) {
+
+	c, err := redis.Dial("tcp", ":6379")
+	if err != nil {
+
+		golog.Crit(err.Error())
+
+	}
+	defer c.Close()
+
+	for i, _ := range characters.CharactersRedis {
+
+		character := characters.CharactersRedis[i]
+
+		queuename := site + ":ch:" + strconv.Itoa(characters.CharactersRedis[i].Id)
+//		queuename := site + ":ch:"
+				
+		insert_local_redis.InsertCharacter(golog,c,queuename,character,deltahours)
 	}
 
 }

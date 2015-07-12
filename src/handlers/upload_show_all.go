@@ -21,7 +21,7 @@ func ShowAll(c web.C, w http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 
 //	sqlstr := "select ch.Id,Name,Age,Moto,ph.Phone,Description,Region_id,City,Adv_phone_id,Img_orient,Topic,Sex,ch.Created_at,ch.Updated_at,Img_file_name,Img_content_type,Img_file_size,Img_updated_at from characters as ch,adv_phones as ph,regions as re where re.id=ch.region_id and ph.id=ch.adv_phone_id and topic='sex' and sex='female' order by ch.Created_at desc limit 30"
-	sqlstr := "select Id,Age,Created_at,Img_file_name,Img_content_type from characters where topic='sex' and sex='female' order by Created_at desc limit 30"
+	sqlstr := "select Id,Age,Created_at,Img_file_name,Img_content_type from characters where topic='sex' and sex='female' order by Created_at desc limit 10"
 
 	rows, err := db.Query(sqlstr)
 	if err != nil {
