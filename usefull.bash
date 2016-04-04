@@ -85,7 +85,9 @@ update adv_phones set phone='0600411469' where phone not in ('0700411339','07004
 
 
 
+mogrify -chop 0x20+0+0 -gravity South teen.amateur.pics.homemade.004.jpg 
 
+mogrify -chop 0x10%+0+0 -gravity South teen.amateur.pics.homemade.*.jpg 
 
 
 
